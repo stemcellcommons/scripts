@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Prints a comma separated list of SLURM compute nodes that have exessive CPU load.
+"""Prints a comma separated list of SLURM compute nodes that have excessive CPU load.
 Output is suitable for using as value for -x option.
 
 Usage: $ python slurm_nodes.py
@@ -36,7 +36,10 @@ for node_str in output.splitlines():
                 cpu_load = float(param[1])
         except ValueError:
             break
-    if cpu_load > cpu_total * 1.05:
-        node_list.append(node_name)
+    try:
+        if cpu_load > cpu_total * 1.05:
+            node_list.append(node_name)
+    except UnboundLocalError:  # some value is missing
+        continue
 
 print ','.join(node_list)
